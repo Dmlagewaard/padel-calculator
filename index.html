@@ -121,7 +121,7 @@ No. of active players => removed
 	const calculations = {
 		"costs1yearamount":		values => values.res * 365,
 		"costs1yearrevenue":	values => values.costs1yearamount * values.price,
-		"costs1yearplatform":	values => values.costs1yearrevenue * values.feeclub / 100,
+		"costs1yearplatform":	values => values.costs1yearrevenue * values.feeclub / 100 + values.manager * 12,
 
 		"costs1monthamount":	values => values.costs1yearamount / 12,
 		"costs1monthrevenue":	values => values.costs1yearrevenue / 12,
