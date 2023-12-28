@@ -140,29 +140,47 @@ No. of active players => removed
 		"costs1resplatform":	values => values.costs1dayplatform / values.res,
 	};
 
-	// const inputs = document.querySelectorAll('input[id]');
-	// const outputs = [...document.querySelectorAll('output[id]')];
-	// outputs.sort((a, b) => parseInt(a.dataset.order || '0') - parseInt(b.dataset.order || '0'));
-	// const elements = [...inputs, ...outputs];
-	const elements = [...document.querySelectorAll('input[id], output[id]')];
-	const elementsById = elements.reduce((list, el) => (list[el.id] = el, list), {});
+	const inputs = document.querySelectorAll('input[id]');
+	const outputs = [...document.querySelectorAll('output[id]')];
+	// const elements = [...document.querySelectorAll('input[id], output[id]')];
+	const outputsById = outputs.reduce((list, el) => (list[el.id] = el, list), {});
 
 	function recalculate() {
 		const values = {};
-		elements.forEach(el => {
+		const input = new URLSearchParams();
+		inputs.forEach(el => {
+			values[el.id] = parseFloat(el.value || '0');
+			input.set(el.id, el.value || '0');
+		});
+		outputs.forEach(el => {
 			values[el.id] = parseFloat(el.value || '0');
 		});
 
 		Object.entries(calculations).forEach(([id, calc]) => {
 			const value = Math.round(calc(values) * 10) / 10;
-			elementsById[id].value = values[id] = value;
+			outputsById[id].value = values[id] = value;
 		});
+
+		return input;
+	}
+
+	if (location.hash) {
+		const input = new URLSearchParams(location.hash.substr(1));
+		for (const [id, value] of input) {
+			const el = document.getElementById(id);
+			if (el) {
+				el.value = value;
+			}
+		}
 	}
 
 	recalculate();
 
 	document.addEventListener('input', function(e) {
-		setTimeout(recalculate, 1);
+		setTimeout(function() {
+			const input = recalculate();
+			location.hash = String(input);
+		}, 1);
 	});
 })();
 </script>
