@@ -1,6 +1,11 @@
 <!doctype html>
 <html>
 
+<!--
+Price/60 min. => Price/reservation
+Players/reservation => removed
+No. of active players => removed
+-->
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,48 +14,158 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
 	<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
 	<title>Padel Calculator</title>
+	<style>
+	table {
+		border-collapse: collapse;
+	}
+	td, th {
+		text-align: left;
+		border: solid 1px #aaa;
+		padding: 5px 10px;
+	}
+	td.number {
+		text-align: right;
+	}
+
+	input[type="number"] {
+		width: 4em;
+		text-align: right;
+	}
+	</style>
 </head>
 
 <body>
+
 <h2>Club</h2>
-<table border="1">
+<table>
 	<tr>
 		<th>Reservations/day</th>
-		<td><input id="xxx" type="number" value="50" /></td>
+		<td><input id="res" type="number" value="30" /></td>
 	</tr>
 	<tr>
 		<th>No. of courts</th>
-		<td><input id="xxx" type="number" value="5" /></td>
+		<td><input id="courts" type="number" value="16" /></td>
 	</tr>
 	<tr>
-		<th>Price/60 min.</th>
-		<td><input id="xxx" type="number" value="20" /> euro</td>
+		<th>Price/reservation</th>
+		<td><input id="price" type="number" value="22" /> euro</td>
 	</tr>
-	<tr>
+	<!-- <tr>
 		<th>Players/reservation</th>
-		<td><input id="xxx" type="number" value="2" /></td>
+		<td><input id="resplayers" type="number" value="2" /></td>
 	</tr>
 	<tr>
 		<th>No. of active players</th>
-		<td><input id="xxx" type="number" value="500" /></td>
-	</tr>
+		<td><input id="activeplayers" type="number" value="500" /></td>
+	</tr> -->
 </table>
 
 <h2>Player platform</h2>
-<table border="1">
+<table>
 	<tr>
 		<th>Manager/month</th>
-		<td><input id="xxx" type="number" value="100" /> euro</td>
+		<td><input id="manager" type="number" value="99" /> euro</td>
 	</tr>
 	<tr>
 		<th>Bookingfee club</th>
-		<td><input id="xxx" type="number" value="2.5" step="0.1" /> %</td>
+		<td><input id="feeclub" type="number" value="2.5" step="0.1" /> %</td>
 	</tr>
 	<tr>
 		<th>Bookingfee player</th>
-		<td><input id="xxx" type="number" value="4.0" step="0.1" /> %</td>
+		<td><input id="feeplayer" type="number" value="4.0" step="0.1" /> %</td>
 	</tr>
 </table>
+
+<h2>Costs overview</h2>
+<table>
+	<tr>
+		<th>Costs overview</th>
+		<th>Amount</th>
+		<th>Revenue</th>
+		<th>Platform fee</th>
+	</tr>
+	<tr>
+		<th>Reservation</th>
+		<td class="number"><output id="costs1resamount"></output></td>
+		<td class="number"><output id="costs1resrevenue"></output> euro</td>
+		<td class="number"><output id="costs1resplatform"></output> euro</td>
+	</tr>
+	<tr>
+		<th>Reservations/day</th>
+		<td class="number"><output id="costs1dayamount"></output></td>
+		<td class="number"><output id="costs1dayrevenue"></output> euro</td>
+		<td class="number"><output id="costs1dayplatform"></output> euro</td>
+	</tr>
+	<tr>
+		<th>Reservations/week</th>
+		<td class="number"><output id="costs1weekamount"></output></td>
+		<td class="number"><output id="costs1weekrevenue"></output> euro</td>
+		<td class="number"><output id="costs1weekplatform"></output> euro</td>
+	</tr>
+	<tr>
+		<th>Reservations/month</th>
+		<td class="number"><output id="costs1monthamount"></output></td>
+		<td class="number"><output id="costs1monthrevenue"></output> euro</td>
+		<td class="number"><output id="costs1monthplatform"></output> euro</td>
+	</tr>
+	<tr>
+		<th>Reservations/year</th>
+		<td class="number"><output id="costs1yearamount"></output></td>
+		<td class="number"><output id="costs1yearrevenue"></output> euro</td>
+		<td class="number"><output id="costs1yearplatform"></output> euro</td>
+	</tr>
+</table>
+
+<script>
+(function() {
+	const calculations = {
+		"costs1yearamount":		values => values.res * 365,
+		"costs1yearrevenue":	values => values.costs1yearamount * values.price,
+		"costs1yearplatform":	values => values.costs1yearrevenue * values.feeclub / 100,
+
+		"costs1monthamount":	values => values.costs1yearamount / 12,
+		"costs1monthrevenue":	values => values.costs1yearrevenue / 12,
+		"costs1monthplatform":	values => values.costs1yearplatform / 12,
+
+		"costs1weekamount":		values => values.costs1yearamount / 52,
+		"costs1weekrevenue":	values => values.costs1yearrevenue / 52,
+		"costs1weekplatform":	values => values.costs1yearplatform / 52,
+
+		"costs1dayamount":		values => values.costs1yearamount / 365,
+		"costs1dayrevenue":		values => values.costs1yearrevenue / 365,
+		"costs1dayplatform":	values => values.costs1yearplatform / 365,
+
+		"costs1resamount":		values => values.costs1dayamount / values.res,
+		"costs1resrevenue":		values => values.costs1dayrevenue / values.res,
+		"costs1resplatform":	values => values.costs1dayplatform / values.res,
+	};
+
+	// const inputs = document.querySelectorAll('input[id]');
+	// const outputs = [...document.querySelectorAll('output[id]')];
+	// outputs.sort((a, b) => parseInt(a.dataset.order || '0') - parseInt(b.dataset.order || '0'));
+	// const elements = [...inputs, ...outputs];
+	const elements = [...document.querySelectorAll('input[id], output[id]')];
+	const elementsById = elements.reduce((list, el) => (list[el.id] = el, list), {});
+
+	function recalculate() {
+		const values = {};
+		elements.forEach(el => {
+			values[el.id] = parseFloat(el.value || '0');
+		});
+
+		Object.entries(calculations).forEach(([id, calc]) => {
+			const value = Math.round(calc(values) * 10) / 10;
+			elementsById[id].value = values[id] = value;
+		});
+	}
+
+	recalculate();
+
+	document.addEventListener('input', function(e) {
+		setTimeout(recalculate, 1);
+	});
+})();
+</script>
 </body>
 
 </html>
