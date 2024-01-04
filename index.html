@@ -122,22 +122,40 @@ No. of active players => removed
 		"costs1yearamount":		values => values.res * 365,
 		"costs1yearrevenue":	values => values.costs1yearamount * values.price,
 		"costs1yearplatform":	values => values.costs1yearrevenue * values.feeclub / 100 + values.manager * 12,
+		"costs1yearplatformcourts":	values => values.costs1yearrevenue * values.feeclub / 100 + values.manager * 12 / values.courts,
+		"costs1yearplatformplayer":	values => values.costs1yearrevenue * values.feeplayer / 100,
+		"costs1yearplatformtotal":	values => values.costs1yearrevenue * values.feeclub / 100 + values.feeplayer / 100 + values.manager * 12
+
 
 		"costs1monthamount":	values => values.costs1yearamount / 12,
 		"costs1monthrevenue":	values => values.costs1yearrevenue / 12,
 		"costs1monthplatform":	values => values.costs1yearplatform / 12,
+		"costs1monthplatformcourts":	values => values.costs1yearplatformcourts / 12,
+		"costs1monthplatformplayer":	values => values.costs1yearplatformplayer / 12,
+		"costs1monthplatformtotal":	values => values.costs1yearplatformtotal / 12,
 
-		"costs1weekamount":		values => values.costs1yearamount / 52,
-		"costs1weekrevenue":	values => values.costs1yearrevenue / 52,
-		"costs1weekplatform":	values => values.costs1yearplatform / 52,
+
+		"costs1weekamount":		values => values.costs1yearamount / 365 * 7,
+		"costs1weekrevenue":	values => values.costs1yearrevenue / 365 * 7,
+		"costs1weekplatform":	values => values.costs1yearplatform / 365 * 7,
+		"costs1weekplatformcourts":	values => values.costs1yearplatformcourts / 365 * 7,
+		"costs1weekplatformplayer":	values => values.costs1yearplatformplayer / 365 * 7,
+		"costs1weekplatformtotal":	values => values.costs1yearplatformtotal / 365 * 7,
 
 		"costs1dayamount":		values => values.costs1yearamount / 365,
 		"costs1dayrevenue":		values => values.costs1yearrevenue / 365,
 		"costs1dayplatform":	values => values.costs1yearplatform / 365,
+		"costs1dayplatformcourts":	values => values.costs1yearplatformcourts / 365,
+		"costs1dayplatformplayer":	values => values.costs1yearplatformplayer / 365,
+		"costs1dayplatformtotal":	values => values.costs1yearplatformtotal / 365,
 
 		"costs1resamount":		values => values.costs1dayamount / values.res,
 		"costs1resrevenue":		values => values.costs1dayrevenue / values.res,
 		"costs1resplatform":	values => values.costs1dayplatform / values.res,
+		"costs1resplatformcourts":	values => values.costs1dayplatformcourts / values.res,
+		"costs1resplatformplayer":	values => values.costs1dayplatformplayer / values.res,
+		"costs1resplatformtotal":	values => values.costs1dayplatformtotal / values.res,
+		
 	};
 
 	const inputs = document.querySelectorAll('input[id]');
